@@ -6,7 +6,87 @@
         xmlns:local="clr-namespace:CODINGDojooo5"
         mc:Ignorable="d"
         Title="MainWindow" Height="350" Width="525">
+
+    <Window.Resources>
+        <DataTemplate x:Key="DefaultLayout">
+            <Border BorderBrush="Black" BorderThickness="2" CornerRadius="5" Width="200">
+                <StackPanel Orientation="Horizontal">
+                    <Image Source="{Binding Image}" Height="60" Margin="3"/>
+                    <Label Content="{Binding Description}" VerticalAlignment="Center" Margin="5,0"/>
+                </StackPanel>
+            </Border>
+        </DataTemplate>
+        <DataTemplate x:Key="SelectedLayout">
+            <!-- alternative to using datatemplate directly-->
+            <StackPanel>
+                <Border BorderBrush="Black" BorderThickness="2" CornerRadius="5" Width="200">
+                    <StackPanel>
+                        <StackPanel Orientation="Horizontal">
+                            <Image Source="{Binding Image}" Height="60" Margin="3"/>
+                            <Label Content="{Binding Description}" VerticalAlignment="Center" Margin="5,0"/>
+                        </StackPanel>
+                        <Button Content="Buy" Command="{Binding BuyBtnClickedCmd, RelativeSource={RelativeSource AncestorType={x:Type ItemsControl}}}" Height="35" Width="190" HorizontalAlignment="Center" Margin="3"/>
+                    </StackPanel>
+                </Border>
+            </StackPanel>
+        </DataTemplate>
+
+    </Window.Resources>
+    <Window.DataContext>
+        <Binding Mode="OneWay" Path="Main" Source="{StaticResource Locator}"/>
+    </Window.DataContext>
+
     <Grid>
-        
+        <Grid.ColumnDefinitions>
+            <ColumnDefinition Width="220"/>
+            <ColumnDefinition Width="*"/>
+        </Grid.ColumnDefinitions>
+        <Grid.RowDefinitions>
+            <RowDefinition Height="*"/>
+            <RowDefinition Height="80"/>
+        </Grid.RowDefinitions>
+
+        <ListBox ItemsSource="{Binding Items}" SelectedItem="{Binding CurrentItem}" ItemTemplate="{StaticResource DefaultLayout}"/>
+
+        <!-- Detail selection (with buy button-->
+        <ItemsControl Grid.Column="1" ItemsSource="{Binding CurrentItem.Items}">
+            <ItemsControl.ItemsPanel>
+                <ItemsPanelTemplate>
+                    <WrapPanel Orientation="Horizontal"/>
+                </ItemsPanelTemplate>
+            </ItemsControl.ItemsPanel>
+            <ItemsControl.ItemTemplate>
+                <DataTemplate>
+                    <StackPanel>
+                        <Border BorderBrush="Black" BorderThickness="2" CornerRadius="5" Width="220" Margin="5">
+                            <StackPanel>
+                                <StackPanel Orientation="Horizontal">
+                                    <Image Source="{Binding Image}" Height="60" Margin="3"/>
+                                    <Label Content="{Binding Description}" VerticalAlignment="Center" Margin="5,0"/>
+                                    <Label Content="{Binding AgeRecommendation}" FontSize="20" VerticalAlignment="Center" ></Label>
+                                </StackPanel>
+                                <Button Content="Buy" 
+                                        Command="{Binding DataContext.BuyBtnClickedCmd, RelativeSource={RelativeSource AncestorType=ItemsControl}}"
+                                        CommandParameter="{Binding}"
+                                        Height="35" Width="190" HorizontalAlignment="Center" Margin="3"/>
+                            </StackPanel>
+                        </Border>
+                    </StackPanel>
+                </DataTemplate>
+            </ItemsControl.ItemTemplate>
+        </ItemsControl>
+        <!-- Listbox displays the selected -->
+        <ListBox Grid.Row="1" Grid.ColumnSpan="2" ItemsSource="{Binding Cart}">
+            <ListBox.ItemsPanel>
+                <ItemsPanelTemplate>
+                    <StackPanel Orientation="Horizontal"/>
+                </ItemsPanelTemplate>
+            </ListBox.ItemsPanel>
+            <ListBox.ItemTemplate>
+                <DataTemplate>
+                    <Image Source="{Binding Image}" Height="80"/>
+                </DataTemplate>
+            </ListBox.ItemTemplate>
+        </ListBox>
     </Grid>
 </Window>
