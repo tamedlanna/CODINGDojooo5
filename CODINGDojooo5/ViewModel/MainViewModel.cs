@@ -17,7 +17,7 @@ namespace CODINGDojooo5.ViewModel
   
       
 
-        public ItemVm MyProperty
+        public ItemVm CurrentItem
         {
             get { return currentItem; }
             set
